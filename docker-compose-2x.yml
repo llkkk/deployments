@@ -2,7 +2,7 @@ version: "3"
 
 services:
   arex:
-    image: arexadmin01/arex:$AREX_VERSION
+    image: ${AREX_REGISTRY}arexadmin01/arex:${AREX_VERSION}
     container_name: arex-front
     restart: always
     ports:
@@ -21,14 +21,14 @@ services:
       arex-schedule-service:
         condition: service_healthy
   arex-api-service:
-    image: arexadmin01/arex-api:$AREX_VERSION
+    image: ${AREX_REGISTRY}arexadmin01/arex-api:${AREX_VERSION}
     container_name: arex-api
     restart: always
     ports:
       - '8090:8080'
       - '20090:20090'
     volumes:
-      - ./arex-logs/arex-api:/usr/local/tomcat/logs
+      - ./arex-logs/arex-api:/logs
       - ./additional-config:/usr/local/tomcat/additional-config
     environment:
       - TZ=Asia/Shanghai
@@ -48,14 +48,14 @@ services:
       timeout: 3s
       retries: 15
   arex-storage-service:
-    image: arexadmin01/arex-storage-serive:$AREX_VERSION
+    image: ${AREX_REGISTRY}arexadmin01/arex-storage-serive:${AREX_VERSION}
     container_name: arex-storage
     restart: always
     ports:
       - '8093:8080'
       - '20093:20093'
     volumes:
-      - ./arex-logs/arex-storage:/usr/local/tomcat/logs
+      - ./arex-logs/arex-storage:/logs
     environment:
       - TZ=Asia/Shanghai
       - JAVA_OPTS=-Darex.mongo.uri=$AREX_MONGO_URI
@@ -70,14 +70,14 @@ services:
       timeout: 3s
       retries: 15
   arex-schedule-service:
-    image: arexadmin01/arex-replay-schedule:$AREX_VERSION
+    image: ${AREX_REGISTRY}arexadmin01/arex-replay-schedule:${AREX_VERSION}
     container_name: arex-schedule
     restart: always
     ports:
       - '8092:8080'
       - '20092:20092'
     volumes:
-      - ./arex-logs/arex-schedule:/usr/local/tomcat/logs
+      - ./arex-logs/arex-schedule:/logs
       - ./custom-dubbo:/usr/local/tomcat/custom-dubbo
     environment:
       - TZ=Asia/Shanghai
